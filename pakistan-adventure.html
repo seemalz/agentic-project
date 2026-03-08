@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hamza's Great Adventure</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: #0d1b2a;
+      font-family: 'Segoe UI', Georgia, sans-serif;
+      color: #f0e6d3;
+      padding: 2rem 1rem 4rem;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    header h1 {
+      font-size: 1.9rem;
+      letter-spacing: 2px;
+      color: #f5a623;
+      text-shadow: 0 0 18px rgba(245,166,35,0.4);
+    }
+
+    header p.subtitle {
+      font-size: 0.85rem;
+      color: #7a9e7e;
+      margin-top: 0.3rem;
+      letter-spacing: 1px;
+    }
+
+    /* Breadcrumb */
+    #breadcrumb {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.3rem;
+      justify-content: center;
+      max-width: 680px;
+      width: 100%;
+      margin-bottom: 1.2rem;
+      min-height: 1.4rem;
+    }
+
+    .crumb {
+      background: #01411c;
+      color: #a8d5b5;
+      font-size: 0.7rem;
+      padding: 0.2rem 0.55rem;
+      border-radius: 20px;
+      letter-spacing: 0.5px;
+    }
+
+    .crumb-arrow {
+      color: #3a5a40;
+      font-size: 0.75rem;
+      line-height: 1.6rem;
+    }
+
+    /* Scene card */
+    #scene-card {
+      background: #111f33;
+      border: 2px solid #01411c;
+      border-radius: 18px;
+      max-width: 680px;
+      width: 100%;
+      padding: 2rem 2rem 1.6rem;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(245,166,35,0.08);
+      animation: fadeIn 0.4s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    #scene-emoji {
+      font-size: 5rem;
+      text-align: center;
+      margin-bottom: 1.2rem;
+      line-height: 1;
+      filter: drop-shadow(0 4px 12px rgba(0,0,0,0.4));
+    }
+
+    #scene-location {
+      text-align: center;
+      font-size: 0.75rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #f5a623;
+      margin-bottom: 0.6rem;
+    }
+
+    #scene-text {
+      font-size: 1.05rem;
+      line-height: 1.75;
+      color: #f0e6d3;
+      margin-bottom: 1.6rem;
+    }
+
+    /* Choices */
+    #choices {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .choice-btn {
+      background: linear-gradient(135deg, #162b1e 0%, #0e2016 100%);
+      border: 1.5px solid #2d6a4f;
+      border-radius: 12px;
+      color: #c8e6c9;
+      font-size: 0.97rem;
+      padding: 0.9rem 1.2rem;
+      cursor: pointer;
+      text-align: left;
+      transition: background 0.15s, border-color 0.15s, transform 0.1s;
+      line-height: 1.45;
+      letter-spacing: 0.2px;
+    }
+
+    .choice-btn:hover {
+      background: linear-gradient(135deg, #1e4230 0%, #162b1e 100%);
+      border-color: #f5a623;
+      color: #fff;
+      transform: translateX(4px);
+    }
+
+    .choice-btn .choice-label {
+      display: inline-block;
+      background: #f5a623;
+      color: #0d1b2a;
+      font-weight: 700;
+      font-size: 0.78rem;
+      padding: 0.1rem 0.45rem;
+      border-radius: 6px;
+      margin-right: 0.55rem;
+      letter-spacing: 0.5px;
+    }
+
+    /* Ending */
+    .ending-badge {
+      text-align: center;
+      font-size: 2.5rem;
+      margin-bottom: 0.6rem;
+    }
+
+    .ending-title {
+      text-align: center;
+      font-size: 1.1rem;
+      color: #f5a623;
+      font-weight: 700;
+      letter-spacing: 1px;
+      margin-bottom: 1.2rem;
+    }
+
+    /* Bottom buttons */
+    #bottom-bar {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 1.4rem;
+      max-width: 680px;
+      width: 100%;
+      justify-content: flex-start;
+    }
+
+    .nav-btn {
+      background: #16213e;
+      border: 1.5px solid #0f3460;
+      color: #a8c4e0;
+      font-size: 0.88rem;
+      padding: 0.55rem 1.2rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s, transform 0.1s;
+      letter-spacing: 0.5px;
+    }
+
+    .nav-btn:hover {
+      background: #0f3460;
+      border-color: #a8c4e0;
+      transform: scale(1.04);
+    }
+
+    .nav-btn:disabled {
+      opacity: 0.35;
+      cursor: default;
+      transform: none;
+    }
+
+    #restart-btn {
+      background: #01411c;
+      border-color: #f5a623;
+      color: #f5a623;
+      font-weight: 700;
+    }
+
+    #restart-btn:hover {
+      background: #025a27;
+    }
+
+    /* Stars decoration */
+    .stars {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 0;
+    }
+
+    .star {
+      position: absolute;
+      width: 2px; height: 2px;
+      border-radius: 50%;
+      background: #fff;
+      opacity: 0.35;
+    }
+
+    #scene-card, #breadcrumb, #bottom-bar, header {
+      position: relative;
+      z-index: 1;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="stars" id="stars"></div>
+
+  <header>
+    <h1>🗺️ Hamza's Great Adventure</h1>
+    <p class="subtitle">A journey across Pakistan</p>
+  </header>
+
+  <div id="breadcrumb"></div>
+
+  <div id="scene-card">
+    <div id="scene-emoji"></div>
+    <div id="scene-location"></div>
+    <div id="scene-text"></div>
+    <div id="choices"></div>
+  </div>
+
+  <div id="bottom-bar">
+    <button class="nav-btn" id="back-btn" onclick="goBack()">← Go Back</button>
+    <button class="nav-btn" id="restart-btn" onclick="restart()" style="display:none">↺ Play Again</button>
+  </div>
+
+  <script>
+    // ── Scene Data ──────────────────────────────────────────────────────────
+    const SCENES = {
+      start: {
+        id: 'start',
+        location: 'Lahore — Grandfather\'s Attic',
+        emoji: '🏚️📜✨',
+        text: `It is a warm Tuesday afternoon in Lahore. Ten-year-old Hamza is helping his grandfather, Nana Jaan, tidy the old wooden attic above their house in the Walled City.\n\nDust swirls in golden light as Hamza lifts a crumbling tin box — and inside, beneath some dried rose petals, he finds an old rolled-up map. It shows mountains, ruins, and the rooftops of Lahore, with a red star marked in three different places and a note in faded Urdu:\n\n"For the child who is brave enough to look."\n\nHamza's heart pounds. He knows this is no ordinary map. This belonged to Nana Jaan — and it leads to a treasure!`,
+        choices: [
+          { label: 'Head north to the Hunza Valley mountains', next: 'hunza' },
+          { label: 'Travel south to the ancient ruins of Mohenjo-daro', next: 'ruins' },
+          { label: 'Explore the Old Walled City of Lahore', next: 'lahore' }
+        ]
+      },
+
+      hunza: {
+        id: 'hunza',
+        location: 'Hunza Valley, Gilgit-Baltistan',
+        emoji: '🏔️🌸🦋',
+        text: `Hamza convinces his older cousin Zara to drive him north. After two days of travel through the winding Karakoram Highway, they arrive in the Hunza Valley.\n\nHamza gasps — the mountains here are enormous, covered in snow and pink apricot blossoms. The air is cold and crisp and smells like flowers and pine trees. The blue river far below sparkles like a diamond.\n\nHe checks the map. The red star points toward a rocky hillside ahead. But the path is blocked by a large, shaggy yak sitting right in the middle of the trail, chewing peacefully. Above the yak, a tall stone lookout tower rises into the misty sky.`,
+        choices: [
+          { label: 'Try to make friends with the stubborn yak', next: 'yak_friend' },
+          { label: 'Climb the lookout tower for a better view', next: 'tower' }
+        ]
+      },
+
+      ruins: {
+        id: 'ruins',
+        location: 'Mohenjo-daro, Sindh',
+        emoji: '🏛️🪆🌵',
+        text: `Hamza and Zara travel south to the ancient city of Mohenjo-daro in the Sindh desert. As they step through the mud-brick ruins, Hamza feels like he has walked back in time — thousands of years into the past!\n\nThe city is enormous, with wide streets, wells, and buildings built by people who lived here in 2500 BCE. Archaeologists carefully brush dust off old pottery nearby.\n\nThe map's red star points deep into the ruins. Hamza spots two possibilities: a dark, narrow tunnel that dips beneath one of the old walls, and a friendly archaeologist in a khaki hat who is studying exactly the same area the map shows.`,
+        choices: [
+          { label: 'Slip into the dark tunnel to explore alone', next: 'tunnel' },
+          { label: 'Politely ask the archaeologist for help', next: 'archaeologist' }
+        ]
+      },
+
+      lahore: {
+        id: 'lahore',
+        location: 'The Walled City of Lahore',
+        emoji: '🕌🌙🏮',
+        text: `Hamza doesn't need to go far — the map's star points right into his own neighbourhood! He runs down the narrow lanes of the old Walled City, past colourful kite shops, spice stalls smelling of cardamom and chilli, and the grand pink walls of Lahore Fort gleaming in the afternoon sun.\n\nThe map leads to a tiny, old street near Bhati Gate. Hamza looks around. A sleek, orange street cat sits on a doorstep, watching him with bright yellow eyes. On the corner, a cheerful old chai wala stirs a huge pot of milky tea and smiles at everyone who passes.`,
+        choices: [
+          { label: 'Follow the mysterious orange cat', next: 'cat' },
+          { label: 'Ask the chai wala if he knows this street', next: 'chai_wala' }
+        ]
+      },
+
+      yak_friend: {
+        id: 'yak_friend',
+        location: 'Hunza Valley — Rocky Trail',
+        emoji: '🐃🥕🤝',
+        text: `Hamza remembers that Nana Jaan always said, "Kindness opens every door."\n\nHe spots some wild mountain carrots growing by the path. Carefully, he picks a few and holds them out with a slow, steady hand. The yak sniffs the air… blinks its huge dark eyes… and gently takes the carrots from Hamza's palm! Its warm nose tickles Hamza's fingers and he giggles.\n\nThe yak shuffles aside, and underneath where it was sitting, Hamza finds a flat stone carved with the same symbol as on the map — a crescent moon inside a circle. He lifts the stone and finds a small tin case inside!\n\nInside the tin is a note in Nana Jaan's handwriting: "The real treasure waits at home, my brave one. But you've found your grandfather's most precious memory — his first adventure in these very mountains, age 10, just like you."`,
+        isEnding: false,
+        choices: [
+          { label: 'Continue to the final discovery →', next: 'north_end' }
+        ]
+      },
+
+      tower: {
+        id: 'tower',
+        location: 'Hunza Valley — Ancient Lookout Tower',
+        emoji: '🗼🔭🌄',
+        text: `Hamza carefully climbs the old stone steps of the lookout tower. Each step is smooth from centuries of footsteps. Near the very top, carved into a stone block, he notices a crescent moon inside a circle — exactly like the symbol on the map!\n\nHe runs his fingers over the carving and presses gently. A small hidden nook opens in the stone, and inside is a tiny rolled-up note. Hamza's hands tremble as he reads it.\n\nIt is in Nana Jaan's handwriting: "You have a curious eye, just like your grandfather did! I climbed this very tower at your age and looked out at the whole valley. These mountains hold the beginning of your family's story. The real treasure waits at home."\n\nHamza looks out from the tower. He can see the entire Hunza Valley spread below him — green fields, the silver river, and snow-capped mountains touching the clouds. It is the most beautiful thing he has ever seen.`,
+        isEnding: false,
+        choices: [
+          { label: 'Continue to the final discovery →', next: 'north_end' }
+        ]
+      },
+
+      tunnel: {
+        id: 'tunnel',
+        location: 'Mohenjo-daro — Underground Passage',
+        emoji: '🕯️🪨🏺',
+        text: `Hamza takes a deep breath and ducks into the narrow tunnel. It smells of cool earth and old stone. He uses his phone's torch to light the way. After a few metres, the tunnel opens into a small hidden chamber!\n\nThe walls are covered in ancient carvings — little drawings of fish, leaves, and people dancing. In the centre of the chamber is a stone shelf, and on it sits a clay pot, sealed with mud. Hamza carefully opens it.\n\nInside is a small clay tablet covered in the ancient Indus Valley script. He takes a photo and crawls back out. When he shows the archaeologist outside, her eyes go wide. "This is an incredible find!" she says. "These symbols spell out blessings for a long journey. Your grandfather must have known this chamber was here."`,
+        isEnding: false,
+        choices: [
+          { label: 'Continue to the final discovery →', next: 'ruins_end' }
+        ]
+      },
+
+      archaeologist: {
+        id: 'archaeologist',
+        location: 'Mohenjo-daro — Archaeological Site',
+        emoji: '👩‍🔬🗺️🔍',
+        text: `"Excuse me," says Hamza politely. "I have this old map and I'm not sure what this symbol means. Could you help me?"\n\nThe archaeologist — Dr. Sana, who has kind eyes behind round spectacles — looks at the map carefully. "Oh my goodness," she says softly. "I know who drew this. Many years ago, a young man from Lahore came here to volunteer on our excavation. He helped us find three terracotta figures."\n\nShe pulls out an old photograph from her notebook. In the photo, a young man grins at the camera, holding up a small clay toy shaped like a bull.\n\nHamza stares. He recognizes those eyes. It's a young Nana Jaan!\n\n"He left something for whoever found this map," Dr. Sana says, and leads Hamza to a locked wooden box buried near the main well of the ancient city.`,
+        isEnding: false,
+        choices: [
+          { label: 'Open the wooden box →', next: 'ruins_end' }
+        ]
+      },
+
+      cat: {
+        id: 'cat',
+        location: 'Walled City — Hidden Courtyard',
+        emoji: '🐈🌹🚪',
+        text: `The orange cat stands up, stretches lazily, and then trots down a narrow alley. Hamza follows it past laundry lines strung with bright dupattas, past a barber's shop, and around two more corners — until the cat stops in front of a faded blue wooden door.\n\nThe cat sits beside the door and looks at Hamza as if to say, "Well? Go on then."\n\nHamza pushes it open and steps into the most wonderful hidden courtyard he has ever seen. Rose bushes climb old brick walls, a small fountain trickles softly, and in the centre is an old wooden chest with Nana Jaan's initials carved on the lid.\n\nInside is a bundle of old letters tied with green ribbon, a pressed flower, and a note: "This was my secret thinking spot when I was your age, Hamza. I used to come here to dream big dreams. Now it's yours."`,
+        isEnding: false,
+        choices: [
+          { label: 'Discover the final treasure →', next: 'lahore_end' }
+        ]
+      },
+
+      chai_wala: {
+        id: 'chai_wala',
+        location: 'Walled City — Chai Corner',
+        emoji: '☕🧓📖',
+        text: `The old chai wala squints at the map and then bursts into a warm, rumbling laugh.\n\n"Arre, baba! I know this map!" he says. "A boy drew this. He used to sit right there on that step every evening while his mother went to the market. He said he was going to be a great explorer one day."\n\nHe pours Hamza a small cup of sweet, milky chai. "Your grandfather — because I think that boy must be your grandfather — he found something special behind the blue door at the end of this lane. He asked me to keep it secret for fifty years. Fifty years!" The chai wala laughs again. "And now fifty years are up."\n\nHe hands Hamza a small iron key on a green ribbon.`,
+        isEnding: false,
+        choices: [
+          { label: 'Use the key to unlock the mystery →', next: 'lahore_end' }
+        ]
+      },
+
+      north_end: {
+        id: 'north_end',
+        location: 'Hunza Valley — Journey\'s End',
+        emoji: '🏅🪙🌟',
+        isEnding: true,
+        endingTitle: '✨ Adventure Complete! ✨',
+        text: `When Hamza returns to Lahore, he runs straight to Nana Jaan and puts the tin case on the table in front of him.\n\nNana Jaan's eyes fill with tears of joy. He opens the case with shaking hands and inside, wrapped in soft cloth, are twelve old silver coins — coins he had collected on his very own first adventure as a ten-year-old boy, travelling through Hunza with his own grandfather.\n\n"I was exactly your age," Nana Jaan says, hugging Hamza tightly. "And you followed my footsteps all the way there. That makes these coins yours now."\n\nHamza holds a coin up to the light. On one side is a crescent moon. On the other, a mountain.\n\nHe places it carefully in his pocket — the start of his very own collection.\n\n🌙 THE END 🌙\n\nYou discovered: Nana Jaan's childhood coin collection from Hunza!`
+      },
+
+      ruins_end: {
+        id: 'ruins_end',
+        location: 'Mohenjo-daro — A Precious Discovery',
+        emoji: '🏆🪆⭐',
+        isEnding: true,
+        endingTitle: '✨ Adventure Complete! ✨',
+        text: `Inside the wooden box — or in the hidden chamber — wrapped in a piece of old cloth, is a small terracotta figure. It is a little bull, perfectly shaped, with painted dots along its back. It is exactly like the toys made by people in the Indus Valley more than four thousand years ago.\n\nThere is a note from Nana Jaan: "Dr. Sana let me keep this replica as a gift for my help at the excavation. I have kept it for forty years, waiting for the right person to give it to. That person is you, Hamza. Take care of it — and take care of history."\n\nHamza holds the little terracotta bull very carefully, as if it might crumble. But it is strong and smooth and real.\n\nDr. Sana smiles. "Your grandfather was one of the best volunteers we ever had. It seems curiosity runs in your family."\n\nHamza grins the biggest grin of his life.\n\n🏺 THE END 🏺\n\nYou discovered: Nana Jaan's terracotta bull from the Indus Valley!`
+      },
+
+      lahore_end: {
+        id: 'lahore_end',
+        location: 'Walled City of Lahore — Home',
+        emoji: '📓💛🌹',
+        isEnding: true,
+        endingTitle: '✨ Adventure Complete! ✨',
+        text: `Behind the blue door — or opened with the old iron key — Hamza finds a wooden chest. And inside the chest, wrapped in a faded green cloth, is a diary.\n\nOn the cover, in careful handwriting, it says: "My Adventures. Age 10. Lahore, 1974."\n\nIt is Nana Jaan's childhood diary.\n\nHamza sits in the quiet courtyard and reads. Nana Jaan wrote about exploring these same lanes, befriending the same chai wala's grandfather, climbing the minarets of Badshahi Mosque, and dreaming of seeing every corner of Pakistan.\n\n"He did exactly what I'm doing!" Hamza whispers.\n\nWhen he brings the diary home, Nana Jaan holds it with the greatest tenderness. That evening, they sit together on the rooftop under a sky full of stars, and Nana Jaan reads the diary aloud while Hamza listens — and starts writing the first page of his own.\n\n📖 THE END 📖\n\nYou discovered: Nana Jaan's childhood diary from 1974!`
+      }
+    };
+
+    // ── State ───────────────────────────────────────────────────────────────
+    let currentScene = 'start';
+    let history = [];
+
+    // ── Stars background ────────────────────────────────────────────────────
+    (function makeStars() {
+      const container = document.getElementById('stars');
+      for (let i = 0; i < 80; i++) {
+        const s = document.createElement('div');
+        s.className = 'star';
+        s.style.left = Math.random() * 100 + '%';
+        s.style.top = Math.random() * 100 + '%';
+        s.style.opacity = (Math.random() * 0.4 + 0.1).toFixed(2);
+        s.style.width = s.style.height = (Math.random() * 2 + 1) + 'px';
+        container.appendChild(s);
+      }
+    })();
+
+    // ── Render ──────────────────────────────────────────────────────────────
+    function render() {
+      const scene = SCENES[currentScene];
+
+      // Breadcrumb
+      const crumbEl = document.getElementById('breadcrumb');
+      crumbEl.innerHTML = '';
+      const crumbScenes = [...history, currentScene];
+      crumbScenes.forEach((id, i) => {
+        const s = SCENES[id];
+        if (!s) return;
+        if (i > 0) {
+          const arrow = document.createElement('span');
+          arrow.className = 'crumb-arrow';
+          arrow.textContent = '›';
+          crumbEl.appendChild(arrow);
+        }
+        const crumb = document.createElement('span');
+        crumb.className = 'crumb';
+        crumb.textContent = s.location.split('—')[0].trim();
+        crumbEl.appendChild(crumb);
+      });
+
+      // Scene card with fade-in by replacing it
+      const card = document.getElementById('scene-card');
+      card.style.animation = 'none';
+      void card.offsetHeight; // reflow
+      card.style.animation = 'fadeIn 0.4s ease';
+
+      document.getElementById('scene-emoji').textContent = scene.emoji;
+      document.getElementById('scene-location').textContent = scene.location;
+
+      const textEl = document.getElementById('scene-text');
+      if (scene.isEnding) {
+        textEl.innerHTML =
+          `<div class="ending-badge">🎉</div>` +
+          `<div class="ending-title">${scene.endingTitle}</div>` +
+          scene.text.split('\n').map(p => p ? `<p style="margin-bottom:0.85rem">${p}</p>` : '').join('');
+      } else {
+        textEl.innerHTML = scene.text.split('\n').map(p => p ? `<p style="margin-bottom:0.85rem">${p}</p>` : '').join('');
+      }
+
+      // Choices
+      const choicesEl = document.getElementById('choices');
+      choicesEl.innerHTML = '';
+      if (!scene.isEnding && scene.choices) {
+        const labels = ['A', 'B', 'C'];
+        scene.choices.forEach((choice, i) => {
+          const btn = document.createElement('button');
+          btn.className = 'choice-btn';
+          btn.innerHTML = `<span class="choice-label">${labels[i] || '→'}</span>${choice.label}`;
+          btn.addEventListener('click', () => goTo(choice.next));
+          choicesEl.appendChild(btn);
+        });
+      }
+
+      // Back button
+      document.getElementById('back-btn').disabled = history.length === 0;
+
+      // Restart button
+      document.getElementById('restart-btn').style.display = scene.isEnding ? 'inline-block' : 'none';
+    }
+
+    // ── Navigation ──────────────────────────────────────────────────────────
+    function goTo(sceneId) {
+      history.push(currentScene);
+      currentScene = sceneId;
+      render();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function goBack() {
+      if (history.length === 0) return;
+      currentScene = history.pop();
+      render();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function restart() {
+      history = [];
+      currentScene = 'start';
+      render();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // ── Init ────────────────────────────────────────────────────────────────
+    render();
+  </script>
+</body>
+</html>
